@@ -1,0 +1,31 @@
+name: Build VSNG MultiScreen EXE
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        pip install pywin32 pillow screeninfo pyinstaller
+
+    - name: Build EXE
+      run: |
+        pyinstaller --onefile --windowed --name "VSNG_MultiScreen" vsng_multiscreen.py
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: VSNG_MultiScreen
+        path: dist/VSNG_MultiScreen.exe
